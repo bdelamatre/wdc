@@ -44,7 +44,8 @@ if (Get-Command "choco" -errorAction SilentlyContinue)
 	# Install puppet using chocalately
 	choco install puppet --yes
 
-	if (Get-Command $cmdName -errorAction SilentlyContinue)
+	# Check if Puppet installed properly
+	if (Get-Command "puppet" -errorAction SilentlyContinue)
 	{
 
 		#install puppet windows module
@@ -65,9 +66,38 @@ if (Get-Command "choco" -errorAction SilentlyContinue)
 	{
 		
 		Write-Host "Puppet failed to install properly"
+		Write-Host "Puppet may have failed to install due to UAC settings. Would you like to apply a registry setting to disable UAC?"
 		
-		#open the chocolatey log
-		Invoke-Item "%PROGRAMDATA%\chocolatey\logs\chocolatey.log"
+		#fix-me: we should check the registry to see if this setting is already correct
+		$DisableUAC = Read-Host -Prompt "Disable UAC? [Y/n]"
+		
+		if(-not $DisableUAC -eq "n"){
+		
+			Write-Host "Changing EnableLUA at HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+			reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /d 0 /t REG_DWORD /f /reg:64
+		
+			Write-Host "You will need to reboot Windows for this change to take effect?"
+			$Reboot = Read-Host -Prompt "Reboot? [Y/n]"
+			
+			if(-not $Reboot -eq "n"){
+				Restart-Computer
+			}
+		
+		}else{
+		
+			Write-Host "Understood. You may try rebooting and running this scrupt again."
+			Write-Host "Check https://docs.puppet.com/pe/latest/troubleshooting_windows.html for troubleshooting help."
+		
+			$OpenLog = Read-Host -Prompt "Open Chocolatey? [Y/n]"
+			
+			if(-not $OpenLog -eq "n"){
+			
+				#open the chocolatey log
+				Invoke-Item $env:programData + "\chocolatey\logs\chocolatey.log"		
+			
+			}
+
+		}
 	
 	}
 	
