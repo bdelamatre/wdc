@@ -85,7 +85,7 @@ $browsersUninstallOther 	= false
 # this will edit the registry and set the default browser to the following progid
 # allowed values are 'ChromeHTML', 'FirefoxHTML', false
 $defaultBrowser 			= false
-//$defaultBrowser 			= 'ChromeHTML'
+#$defaultBrowser 			= 'ChromeHTML'
 
 
 /*
@@ -100,7 +100,7 @@ $defaultBrowser 			= false
 #allowed values are 365, local, none/false
 $microsoftOfficeVersion 	= '365'
 #$microsoftOfficeVersion 	= 'local'
-#$microsoftOfficeVersion 	= false //won't install MicrosoftOffice
+#$microsoftOfficeVersion 	= false
 
 $microsoftOffice365Install 	= false
 
